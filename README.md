@@ -350,17 +350,17 @@ The free trial is a full-capability 30-day window — not a feature-limited vers
 
 ## Feature Roadmap
 
-### MVP — Q1 2025 (Core Signal Engine)
+### MVP — Q2 2026 (Core Signal Engine)
 NSE/BSE real-time signal feed · LSTM + XGBoost signal engine · Claude Haiku signal enrichment (reasoning + target/SL) · Stock Detail screen (chart + 5 tabs) · Watchlist with price alerts · User auth + risk appetite onboarding
 
 Success gate: 50+ pilot users · signal pipeline stable · hit rate tracked
 
-### V1.0 — Q2 2025 (Full Platform + Portfolio Intelligence)
+### V1.0 — Q4 2026 (Full Platform + Portfolio Intelligence)
 Portfolio import (Zerodha, Angel One, Groww XLSX) · Signal outcome tracking (Hit / Miss / Pending) · Signal Analytics dashboard · Multi-exchange coverage (NASDAQ, S&P 500, DAX) · Full LLM news sentiment pipeline · FCM push notifications
 
 Success gate: 500+ paying users · ₹15L+ MRR · NPS > 45
 
-### V2.0 — Q4 2025 (Analytics + Platform Expansion)
+### V2.0 — Q2 2027 (Analytics + Platform Expansion)
 Cohort performance benchmarking · Macro impact scoring per holding · F&O signal integration (PCR, OI, IV) · Scheduled signal digest (daily/weekly) · SEBI-RIA white-label dashboard · API programme for wealth tech integrators
 
 Success gate: 2,000+ users · ₹60L+ MRR · 55%+ signal hit rate
