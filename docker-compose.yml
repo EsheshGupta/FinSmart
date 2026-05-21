@@ -1,0 +1,105 @@
+version: "3.9"
+
+services:
+  # ── Infrastructure ────────────────────────────────────────────
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.5.0
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+    ports: ["2181:2181"]
+
+  kafka:
+    image: confluentinc/cp-kafka:7.5.0
+    depends_on: [zookeeper]
+    ports: ["9092:9092"]
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+  postgres:
+    image: timescale/timescaledb:latest-pg15
+    environment:
+      POSTGRES_USER: finsmart
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+      POSTGRES_DB: finsmart
+    ports: ["5432:5432"]
+    volumes: [pgdata:/var/lib/postgresql/data]
+
+  redis:
+    image: redis:7-alpine
+    ports: ["6379:6379"]
+
+  # ── Backend services ──────────────────────────────────────────
+  user-service:
+    build: ./backend/user-service
+    ports: ["8001:8000"]
+    env_file: ./backend/user-service/.env.example
+    depends_on: [postgres, redis]
+
+  portfolio-service:
+    build: ./backend/portfolio-service
+    ports: ["8002:8000"]
+    env_file: ./backend/portfolio-service/.env.example
+    depends_on: [postgres]
+
+  market-data-service:
+    build: ./backend/market-data-service
+    ports: ["8003:8000"]
+    env_file: ./backend/market-data-service/.env.example
+    depends_on: [postgres, kafka]
+
+  signal-service:
+    build: ./backend/signal-service
+    ports: ["8004:8000"]
+    env_file: ./backend/signal-service/.env.example
+    depends_on: [postgres, redis, kafka]
+
+  sentiment-service:
+    build: ./backend/sentiment-service
+    ports: ["8005:8000"]
+    env_file: ./backend/sentiment-service/.env.example
+    depends_on: [postgres, kafka]
+
+  news-events-service:
+    build: ./backend/news-events-service
+    ports: ["8006:8000"]
+    env_file: ./backend/news-events-service/.env.example
+    depends_on: [postgres]
+
+  watchlist-service:
+    build: ./backend/watchlist-service
+    ports: ["8007:8000"]
+    env_file: ./backend/watchlist-service/.env.example
+    depends_on: [postgres, redis]
+
+  notification-service:
+    build: ./backend/notification-service
+    ports: ["8008:8000"]
+    env_file: ./backend/notification-service/.env.example
+    depends_on: [postgres, kafka]
+
+  cohort-service:
+    build: ./backend/cohort-service
+    ports: ["8009:8000"]
+    env_file: ./backend/cohort-service/.env.example
+    depends_on: [postgres]
+
+  api-gateway:
+    build: ./backend/api-gateway
+    ports: ["8000:8000"]
+    env_file: ./backend/api-gateway/.env.example
+    depends_on:
+      - user-service
+      - portfolio-service
+      - market-data-service
+      - signal-service
+      - sentiment-service
+      - news-events-service
+      - watchlist-service
+      - notification-service
+      - cohort-service
+
+volumes:
+  pgdata:
